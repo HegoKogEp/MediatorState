@@ -1,35 +1,41 @@
-# Project Documentation
+# MediatorState - Документация по проекту
 
-Generated on: 2026-04-09 21:51:44
+## Содержание
 
-## Table of Contents
+1. [MediatorState](#mediatorstate)
+   1. [MediatorState.csproj](#mediatorstate)
+   2. [Program.cs](#program)
+2. [MediatorState\Models](#models)
+   1. [Dispatcher.cs](#dispatcher)
+   2. [Document.cs](#document)
+   3. [Logger.cs](#logger)
+   4. [Printer.cs](#printer)
+   5. [PrintQueue.cs](#printqueue)
+   6. [PrintSystemMediator.cs](#printsystemmediator)
+3. [MediatorState\Models\Base](#base)
+   1. [Colleague.cs](#colleague)
+4. [MediatorState\Models\Interfaces](#interfaces)
+   1. [IDocumentState.cs](#idocumentstate)
+   2. [IMediator.cs](#imediator)
+5. [MediatorState\Models\States](#states)
+   1. [DoneState.cs](#donestate)
+   2. [ErrorState.cs](#errorstate)
+   3. [NewState.cs](#newstate)
+   4. [PrintingState.cs](#printingstate)
+6. [MediatorState\obj\Debug\net10.0](#net10)
+   1. [.NETCoreApp,Version=v10.0.AssemblyAttributes.cs](#netcoreappversionv100assemblyattributes)
+   2. [MediatorState.AssemblyInfo.cs](#mediatorstateassemblyinfo)
+   3. [MediatorState.GlobalUsings.g.cs](#mediatorstateglobalusingsg)
 
-1. [MediatorState.csproj](#mediatorstate-csproj)
-2. [Program.cs](#program-cs)
-3. [Models/Dispatcher.cs](#models-dispatcher-cs)
-4. [Models/Document.cs](#models-document-cs)
-5. [Models/Logger.cs](#models-logger-cs)
-6. [Models/Printer.cs](#models-printer-cs)
-7. [Models/PrintQueue.cs](#models-printqueue-cs)
-8. [Models/PrintSystemMediator.cs](#models-printsystemmediator-cs)
-9. [Models/Base/Colleague.cs](#models-base-colleague-cs)
-10. [Models/Interfaces/IDocumentState.cs](#models-interfaces-idocumentstate-cs)
-11. [Models/Interfaces/IMediator.cs](#models-interfaces-imediator-cs)
-12. [Models/States/DoneState.cs](#models-states-donestate-cs)
-13. [Models/States/ErrorState.cs](#models-states-errorstate-cs)
-14. [Models/States/NewState.cs](#models-states-newstate-cs)
-15. [Models/States/PrintingState.cs](#models-states-printingstate-cs)
-16. [obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs](#obj-debug-net10-0-netcoreapp,version=v10-0-assemblyattributes-cs)
-17. [obj/Debug/net10.0/MediatorState.AssemblyInfo.cs](#obj-debug-net10-0-mediatorstate-assemblyinfo-cs)
-18. [obj/Debug/net10.0/MediatorState.GlobalUsings.g.cs](#obj-debug-net10-0-mediatorstate-globalusings-g-cs)
+## FILE 1: Project Root
 
----
+## MediatorState
 
-## MediatorState.csproj
+<a id='mediatorstate'></a>
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\MediatorState.csproj`
+## FILE 1: MediatorState.csproj
 
-**File type:** `.csproj`
+<a id='mediatorstate'></a>
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -47,11 +53,9 @@ Generated on: 2026-04-09 21:51:44
 
 ---
 
-## Program.cs
+## FILE 1: Program.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Program.cs`
-
-**File type:** `.cs`
+<a id='program'></a>
 
 ```csharp
 using MediatorState.Models;
@@ -106,11 +110,13 @@ namespace MediatorState
 
 ---
 
-## Models/Dispatcher.cs
+## MediatorState\Models
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Dispatcher.cs`
+<a id='models'></a>
 
-**File type:** `.cs`
+## FILE 1: Dispatcher.cs
+
+<a id='dispatcher'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -133,11 +139,9 @@ namespace MediatorState.Models
 
 ---
 
-## Models/Document.cs
+## FILE 1: Document.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Document.cs`
-
-**File type:** `.cs`
+<a id='document'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -177,11 +181,9 @@ namespace MediatorState.Models
 
 ---
 
-## Models/Logger.cs
+## FILE 1: Logger.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Logger.cs`
-
-**File type:** `.cs`
+<a id='logger'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -202,11 +204,9 @@ namespace MediatorState.Models
 
 ---
 
-## Models/Printer.cs
+## FILE 1: Printer.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Printer.cs`
-
-**File type:** `.cs`
+<a id='printer'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -240,11 +240,9 @@ namespace MediatorState.Models
 
 ---
 
-## Models/PrintQueue.cs
+## FILE 1: PrintQueue.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\PrintQueue.cs`
-
-**File type:** `.cs`
+<a id='printqueue'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -284,11 +282,9 @@ namespace MediatorState.Models
 
 ---
 
-## Models/PrintSystemMediator.cs
+## FILE 1: PrintSystemMediator.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\PrintSystemMediator.cs`
-
-**File type:** `.cs`
+<a id='printsystemmediator'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -362,11 +358,13 @@ namespace MediatorState.Models
 
 ---
 
-## Models/Base/Colleague.cs
+## MediatorState\Models\Base
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Base\Colleague.cs`
+<a id='base'></a>
 
-**File type:** `.cs`
+## FILE 1: Colleague.cs
+
+<a id='colleague'></a>
 
 ```csharp
 using MediatorState.Models.Interfaces;
@@ -392,11 +390,13 @@ namespace MediatorState.Models.Base
 
 ---
 
-## Models/Interfaces/IDocumentState.cs
+## MediatorState\Models\Interfaces
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Interfaces\IDocumentState.cs`
+<a id='interfaces'></a>
 
-**File type:** `.cs`
+## FILE 1: IDocumentState.cs
+
+<a id='idocumentstate'></a>
 
 ```csharp
 using System;
@@ -419,11 +419,9 @@ namespace MediatorState.Models.Interfaces
 
 ---
 
-## Models/Interfaces/IMediator.cs
+## FILE 1: IMediator.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Interfaces\IMediator.cs`
-
-**File type:** `.cs`
+<a id='imediator'></a>
 
 ```csharp
 using MediatorState.Models.Base;
@@ -443,11 +441,13 @@ namespace MediatorState.Models.Interfaces
 
 ---
 
-## Models/States/DoneState.cs
+## MediatorState\Models\States
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\DoneState.cs`
+<a id='states'></a>
 
-**File type:** `.cs`
+## FILE 1: DoneState.cs
+
+<a id='donestate'></a>
 
 ```csharp
 using MediatorState.Models.Interfaces;
@@ -476,11 +476,9 @@ namespace MediatorState.Models.States
 
 ---
 
-## Models/States/ErrorState.cs
+## FILE 1: ErrorState.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\ErrorState.cs`
-
-**File type:** `.cs`
+<a id='errorstate'></a>
 
 ```csharp
 using MediatorState.Models.Interfaces;
@@ -515,11 +513,9 @@ namespace MediatorState.Models.States
 
 ---
 
-## Models/States/NewState.cs
+## FILE 1: NewState.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\NewState.cs`
-
-**File type:** `.cs`
+<a id='newstate'></a>
 
 ```csharp
 using MediatorState.Models.Interfaces;
@@ -549,11 +545,9 @@ namespace MediatorState.Models.States
 
 ---
 
-## Models/States/PrintingState.cs
+## FILE 1: PrintingState.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\PrintingState.cs`
-
-**File type:** `.cs`
+<a id='printingstate'></a>
 
 ```csharp
 using MediatorState.Models.Interfaces;
@@ -589,11 +583,13 @@ namespace MediatorState.Models.States
 
 ---
 
-## obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+## MediatorState\obj\Debug\net10.0
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs`
+<a id='net10'></a>
 
-**File type:** `.cs`
+## FILE 1: .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+
+<a id='netcoreappversionv100assemblyattributes'></a>
 
 ```csharp
 // <autogenerated />
@@ -605,11 +601,9 @@ using System.Reflection;
 
 ---
 
-## obj/Debug/net10.0/MediatorState.AssemblyInfo.cs
+## FILE 1: MediatorState.AssemblyInfo.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\MediatorState.AssemblyInfo.cs`
-
-**File type:** `.cs`
+<a id='mediatorstateassemblyinfo'></a>
 
 ```csharp
 //------------------------------------------------------------------------------
@@ -640,11 +634,9 @@ using System.Reflection;
 
 ---
 
-## obj/Debug/net10.0/MediatorState.GlobalUsings.g.cs
+## FILE 1: MediatorState.GlobalUsings.g.cs
 
-**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\MediatorState.GlobalUsings.g.cs`
-
-**File type:** `.cs`
+<a id='mediatorstateglobalusingsg'></a>
 
 ```csharp
 // <auto-generated/>
