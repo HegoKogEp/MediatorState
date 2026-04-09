@@ -1,33 +1,38 @@
-# MediatorState - Документация по проекту
+# Project Documentation
 
-## Содержание
-1. [Mediatorstate](#mediatorstate)
-   1. [MediatorState.csproj](#mediatorstatecsproj)
-   2. [Program.cs](#programcs)
-2. [Mediatorstate/Models](#mediatorstate-models)
-   1. [Dispatcher.cs](#dispatchercs)
-   2. [Document.cs](#documentcs)
-   3. [Logger.cs](#loggercs)
-   4. [PrintQueue.cs](#printqueuecs)
-   5. [PrintSystemMediator.cs](#printsystemmediatorcs)
-   6. [Printer.cs](#printercs)
-3. [Mediatorstate/Models/Base](#mediatorstate-models-base)
-   1. [Colleague.cs](#colleaguecs)
-4. [Mediatorstate/Models/Interfaces](#mediatorstate-models-interfaces)
-   1. [IDocumentState.cs](#idocumentstatecs)
-   2. [IMediator.cs](#imediatorcs)
-5. [Mediatorstate/Models/States](#mediatorstate-models-states)
-   1. [DoneState.cs](#donestatecs)
-   2. [ErrorState.cs](#errorstatecs)
-   3. [NewState.cs](#newstatecs)
-   4. [PrintingState.cs](#printingstatecs)
+Generated on: 2026-04-09 21:51:44
 
-## FILE 1: MediatorState.csproj
+## Table of Contents
 
-<a id='mediatorstatecsproj'></a>
+1. [MediatorState.csproj](#mediatorstate-csproj)
+2. [Program.cs](#program-cs)
+3. [Models/Dispatcher.cs](#models-dispatcher-cs)
+4. [Models/Document.cs](#models-document-cs)
+5. [Models/Logger.cs](#models-logger-cs)
+6. [Models/Printer.cs](#models-printer-cs)
+7. [Models/PrintQueue.cs](#models-printqueue-cs)
+8. [Models/PrintSystemMediator.cs](#models-printsystemmediator-cs)
+9. [Models/Base/Colleague.cs](#models-base-colleague-cs)
+10. [Models/Interfaces/IDocumentState.cs](#models-interfaces-idocumentstate-cs)
+11. [Models/Interfaces/IMediator.cs](#models-interfaces-imediator-cs)
+12. [Models/States/DoneState.cs](#models-states-donestate-cs)
+13. [Models/States/ErrorState.cs](#models-states-errorstate-cs)
+14. [Models/States/NewState.cs](#models-states-newstate-cs)
+15. [Models/States/PrintingState.cs](#models-states-printingstate-cs)
+16. [obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs](#obj-debug-net10-0-netcoreapp,version=v10-0-assemblyattributes-cs)
+17. [obj/Debug/net10.0/MediatorState.AssemblyInfo.cs](#obj-debug-net10-0-mediatorstate-assemblyinfo-cs)
+18. [obj/Debug/net10.0/MediatorState.GlobalUsings.g.cs](#obj-debug-net10-0-mediatorstate-globalusings-g-cs)
+
+---
+
+## MediatorState.csproj
+
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\MediatorState.csproj`
+
+**File type:** `.csproj`
 
 ```xml
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -37,43 +42,78 @@
   </PropertyGroup>
 
 </Project>
+
 ```
 
 ---
 
-## FILE 2: Colleague.cs
+## Program.cs
 
-<a id='colleaguecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Program.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using MediatorState.Models;
 
-namespace MediatorState.Models.Base
+namespace MediatorState
 {
-    public abstract class Colleague
+    public class Program
     {
-        protected IMediator? _mediator;
-        public IMediator Mediator { get => _mediator; }
-
-        public void SetMediator(IMediator mediator)
+        static void Main(string[] args)
         {
-            _mediator = mediator;
+            Console.WriteLine("Система управления печатью документов с помощью паттерна 'Состояние' и 'Посредник'.");
+
+            var printer = new Printer();
+            var queue = new PrintQueue();
+            var logger = new Logger();
+            var mediator = new PrintSystemMediator(printer, queue, logger);
+            var dispatcher = new Dispatcher();
+            dispatcher.SetMediator(mediator);
+
+            Console.WriteLine("--------Успешная печать--------");
+            Document document1 = new Document("Документ 1");
+            Document document2 = new Document("Документ 2");
+            document1.SetMediator(mediator);
+            document2.SetMediator(mediator);
+
+            dispatcher.AddToQueue(document1);
+            dispatcher.AddToQueue(document2);
+            dispatcher.ProcessQueue();
+            dispatcher.ProcessQueue();
+
+            Console.WriteLine("--------Ошибка печати--------");
+            Document document3 = new Document("Документ 3");
+            document3.SetMediator(mediator);
+
+            dispatcher.AddToQueue(document3);
+            printer.Failure = true; // Симулируем ошибку печати
+            dispatcher.ProcessQueue();
+
+            document3.Reset(); // Сброс состояния документа
+            dispatcher.AddToQueue(document3);
+            dispatcher.ProcessQueue();
+
+            Console.WriteLine("--------Финальное состояние--------");
+            document1.Print();
+            document1.AddToQueue();
+
         }
     }
 }
+
 ```
 
 ---
 
-## FILE 3: Dispatcher.cs
+## Models/Dispatcher.cs
 
-<a id='dispatchercs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Dispatcher.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -88,16 +128,19 @@ namespace MediatorState.Models
             _mediator.Notify(this, "ProcessQueue");
     }
 }
+
 ```
 
 ---
 
-## FILE 4: Document.cs
+## Models/Document.cs
 
-<a id='documentcs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Document.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Base;
 using MediatorState.Models.Interfaces;
 using MediatorState.Models.States;
 using System;
@@ -129,61 +172,19 @@ namespace MediatorState.Models
         public void Reset() => _state.ResetPrinting(this);
     }
 }
+
 ```
 
 ---
 
-## FILE 5: IDocumentState.cs
+## Models/Logger.cs
 
-<a id='idocumentstatecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Logger.cs`
 
-```csharp
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MediatorState.Models.Interfaces
-{
-    public interface IDocumentState
-    {
-        void Print(Document document);
-        void AddToQueue(Document document);
-        void CompletePrinting(Document document);
-        void FailPrinting(Document document);
-        void ResetPrinting(Document document);
-    }
-}
-```
-
----
-
-## FILE 6: IMediator.cs
-
-<a id='imediatorcs'></a>
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MediatorState.Models.Interfaces
-{
-    public interface IMediator
-    {
-        void Notify(Colleague colleague, string ev, Document? document = null);
-    }
-}
-```
-
----
-
-## FILE 7: Logger.cs
-
-<a id='loggercs'></a>
-
-```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -196,16 +197,57 @@ namespace MediatorState.Models
             Console.WriteLine($"[Лог] {message}");
     }
 }
+
 ```
 
 ---
 
-## FILE 8: PrintQueue.cs
+## Models/Printer.cs
 
-<a id='printqueuecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Printer.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Base;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MediatorState.Models
+{
+    public class Printer : Colleague
+    {
+        public bool Failure { get; set; } = false;
+
+        public void StartPrint(Document document)
+        {
+            Console.WriteLine($"Печать документа: {document.Title}");
+            if (Failure)
+            {
+                Failure = false;
+                _mediator.Notify(this, "PrintFailed", document);
+            }
+            else
+            {
+                _mediator.Notify(this, "PrintSuccess", document);
+            }
+        }
+    }
+}
+
+```
+
+---
+
+## Models/PrintQueue.cs
+
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\PrintQueue.cs`
+
+**File type:** `.cs`
+
+```csharp
+using MediatorState.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -237,16 +279,19 @@ namespace MediatorState.Models
         public bool IsEmpty => _queue.Count == 0;
     }
 }
+
 ```
 
 ---
 
-## FILE 9: PrintSystemMediator.cs
+## Models/PrintSystemMediator.cs
 
-<a id='printsystemmediatorcs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\PrintSystemMediator.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Base;
 using MediatorState.Models.Interfaces;
 using System;
 using System.Collections;
@@ -312,51 +357,100 @@ namespace MediatorState.Models
         }
     }
 }
+
 ```
 
 ---
 
-## FILE 10: Printer.cs
+## Models/Base/Colleague.cs
 
-<a id='printercs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Base\Colleague.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Base;
+using MediatorState.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MediatorState.Models
+namespace MediatorState.Models.Base
 {
-    public class Printer : Colleague
+    public abstract class Colleague
     {
-        public bool Failure { get; set; } = false;
+        protected IMediator? _mediator;
+        public IMediator Mediator { get => _mediator; }
 
-        public void StartPrint(Document document)
+        public void SetMediator(IMediator mediator)
         {
-            Console.WriteLine($"Печать документа: {document.Title}");
-            if (Failure)
-            {
-                Failure = false;
-                _mediator.Notify(this, "PrintFailed", document);
-            }
-            else
-            {
-                _mediator.Notify(this, "PrintSuccess", document);
-            }
+            _mediator = mediator;
         }
     }
 }
+
 ```
 
 ---
 
-## FILE 11: DoneState.cs
+## Models/Interfaces/IDocumentState.cs
 
-<a id='donestatecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Interfaces\IDocumentState.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MediatorState.Models.Interfaces
+{
+    public interface IDocumentState
+    {
+        void Print(Document document);
+        void AddToQueue(Document document);
+        void CompletePrinting(Document document);
+        void FailPrinting(Document document);
+        void ResetPrinting(Document document);
+    }
+}
+
+```
+
+---
+
+## Models/Interfaces/IMediator.cs
+
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\Interfaces\IMediator.cs`
+
+**File type:** `.cs`
+
+```csharp
+using MediatorState.Models.Base;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MediatorState.Models.Interfaces
+{
+    public interface IMediator
+    {
+        void Notify(Colleague colleague, string ev, Document? document = null);
+    }
+}
+
+```
+
+---
+
+## Models/States/DoneState.cs
+
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\DoneState.cs`
+
+**File type:** `.cs`
+
+```csharp
+using MediatorState.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -377,16 +471,19 @@ namespace MediatorState.Models.States
             Console.WriteLine("[FSM:Done] Документ в финальном состоянии, сброс невозможен.");
     }
 }
+
 ```
 
 ---
 
-## FILE 12: ErrorState.cs
+## Models/States/ErrorState.cs
 
-<a id='errorstatecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\ErrorState.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Interfaces;
+using MediatorState.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -413,16 +510,19 @@ namespace MediatorState.Models.States
         }
     }
 }
+
 ```
 
 ---
 
-## FILE 13: NewState.cs
+## Models/States/NewState.cs
 
-<a id='newstatecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\NewState.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Interfaces;
+using MediatorState.Models.Interfaces;
 
 namespace MediatorState.Models.States
 {
@@ -449,12 +549,14 @@ namespace MediatorState.Models.States
 
 ---
 
-## FILE 14: PrintingState.cs
+## Models/States/PrintingState.cs
 
-<a id='printingstatecs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\Models\States\PrintingState.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models.Interfaces;
+using MediatorState.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -482,62 +584,78 @@ namespace MediatorState.Models.States
             Console.WriteLine("[FSM:Printing] Нельзя сбросить документ во время печати.");
     }
 }
+
 ```
 
 ---
 
-## FILE 15: Program.cs
+## obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
 
-<a id='programcs'></a>
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs`
+
+**File type:** `.cs`
 
 ```csharp
-﻿using MediatorState.Models;
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v10.0", FrameworkDisplayName = ".NET 10.0")]
 
-namespace MediatorState
-{
-    public class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Система управления печатью документов с помощью паттерна 'Состояние' и 'Посредник'.");
+```
 
-            var printer = new Printer();
-            var queue = new PrintQueue();
-            var logger = new Logger();
-            var mediator = new PrintSystemMediator(printer, queue, logger);
-            var dispatcher = new Dispatcher();
-            dispatcher.SetMediator(mediator);
+---
 
-            Console.WriteLine("--------Успешная печать--------");
-            Document document1 = new Document("Документ 1");
-            Document document2 = new Document("Документ 2");
-            document1.SetMediator(mediator);
-            document2.SetMediator(mediator);
+## obj/Debug/net10.0/MediatorState.AssemblyInfo.cs
 
-            dispatcher.AddToQueue(document1);
-            dispatcher.AddToQueue(document2);
-            dispatcher.ProcessQueue();
-            dispatcher.ProcessQueue();
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\MediatorState.AssemblyInfo.cs`
 
-            Console.WriteLine("--------Ошибка печати--------");
-            Document document3 = new Document("Документ 3");
-            document3.SetMediator(mediator);
+**File type:** `.cs`
 
-            dispatcher.AddToQueue(document3);
-            printer.Failure = true; // Симулируем ошибку печати
-            dispatcher.ProcessQueue();
+```csharp
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
 
-            document3.Reset(); // Сброс состояния документа
-            dispatcher.AddToQueue(document3);
-            dispatcher.ProcessQueue();
+using System;
+using System.Reflection;
 
-            Console.WriteLine("--------Финальное состояние--------");
-            document1.Print();
-            document1.AddToQueue();
+[assembly: System.Reflection.AssemblyCompanyAttribute("MediatorState")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f920f86805c364b7de33e4e5c2df34a3344ab05f")]
+[assembly: System.Reflection.AssemblyProductAttribute("MediatorState")]
+[assembly: System.Reflection.AssemblyTitleAttribute("MediatorState")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
-        }
-    }
-}
+// Создано классом WriteCodeFragment MSBuild.
+
+
+```
+
+---
+
+## obj/Debug/net10.0/MediatorState.GlobalUsings.g.cs
+
+**File path:** `D:\ResoursesVisualStudio\MediatorState\MediatorState\obj\Debug\net10.0\MediatorState.GlobalUsings.g.cs`
+
+**File type:** `.cs`
+
+```csharp
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Net.Http;
+global using System.Threading;
+global using System.Threading.Tasks;
+
 ```
 
 ---
