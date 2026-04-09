@@ -47,7 +47,7 @@ namespace MediatorState.Models
                         return;
                     }
                     var nextDoc = _printQueue.DequeueItem();
-                    nextDoc!.SetMediator(this);
+                    nextDoc.SetMediator(this);
                     nextDoc.Print();
                     break;
 
