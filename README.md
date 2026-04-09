@@ -295,7 +295,7 @@ namespace MediatorState.Models
                         return;
                     }
                     var nextDoc = _printQueue.DequeueItem();
-                    nextDoc!.SetMediator(this);
+                    nextDoc.SetMediator(this);
                     nextDoc.Print();
                     break;
 
@@ -423,31 +423,26 @@ namespace MediatorState.Models.States
 
 ```csharp
 ﻿using MediatorState.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MediatorState.Models.States
 {
     public class NewState : IDocumentState
     {
-        public void Print(Document document) =>
-             Console.WriteLine("[FSM:Printing] Документ уже в процессе печати.");
+        public void Print(Document document)
+        {
+            document.SetState(new PrintingState());
+            document.Mediator.Notify(document, "RequestPrint", document);
+        }
+
         public void AddToQueue(Document document) =>
-            Console.WriteLine("[FSM:Printing] Нельзя добавить в очередь документ, который печатается.");
+            document.Mediator.Notify(document, "AddToQueue", document);
 
-        public void CompletePrinting(Document document)
-        {
-            document.SetState(new DoneState());
-        }
-
-        public void FailPrinting(Document document)
-        {
-            document.SetState(new ErrorState());
-        }
-
+        public void CompletePrinting(Document document) =>
+            Console.WriteLine("[FSM:New] Документ еще не печатается.");
+        public void FailPrinting(Document document) =>
+            Console.WriteLine("[FSM:New] Ошибка невозможна для нового документа.");
         public void ResetPrinting(Document document) =>
-            Console.WriteLine("[FSM:Printing] Нельзя сбросить документ во время печати.");
+            Console.WriteLine("[FSM:New] Документ уже в начальном состоянии.");
     }
 }
 ```
